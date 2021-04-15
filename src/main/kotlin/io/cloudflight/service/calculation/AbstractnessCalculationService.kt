@@ -1,30 +1,59 @@
-package io.cloudflight.service
+package io.cloudflight.service.calculation
 
-import io.cloudflight.entity.InputParameter
-import org.springframework.stereotype.Service
+import io.cloudflight.utils.containsText
+import java.io.File
 
-interface ComponentMatrixCalculationService { // TODO split into different services if they get bigger
+internal interface AbstractnessCalculationService {
 
-    fun calculateAbstractness(inputParameter: InputParameter): Double
-
-    fun calculateInstability(inputParameter: InputParameter): Double
-
-    fun plotComponentMatrix() // TODO
+    fun calculateAbstractnessForDirectory(baseDirectory: File): Double
 
 }
 
-@Service
-class ComponentMatrixCalculationServiceImpl : ComponentMatrixCalculationService {
-    override fun calculateAbstractness(inputParameter: InputParameter): Double {
-        TODO("Not yet implemented")
+internal class AbstractnessCalculationServiceImpl : AbstractnessCalculationService {
+
+    private val javaFileEnding = ".java"
+    private val kotlinFileEnding = ".kt"
+    private val abstractKeywords = listOf("interface", "abstract")
+
+    override fun calculateAbstractnessForDirectory(baseDirectory: File): Double {
+        val allFilesInDirectory = getAllFilesForProject(baseDirectory)
+
+        return calculateAbstractnessForFiles(allFilesInDirectory)
     }
 
-    override fun calculateInstability(inputParameter: InputParameter): Double {
-        TODO("Not yet implemented")
+    private fun getAllFilesForProject(projectPath: File): List<File> {
+        return projectPath.walkTopDown().toList()
     }
 
-    override fun plotComponentMatrix() {
-        TODO("Not yet implemented")
+    private fun calculateAbstractnessForFiles(allFilesInDirectory: List<File>): Double {
+        val allCodeFilesCount = allFilesInDirectory.filter { it.isCodeClass() }.size
+        val abstractFilesCount = allFilesInDirectory.filter { it.isAbstract() }.size
+
+        return if (abstractFilesCount > 0) {
+            abstractFilesCount / allCodeFilesCount.toDouble()
+        } else {
+            0.0
+        }
+    }
+
+    companion object AbstractFileUtils { // TODO is it a good idea to have this here?
+        private val javaFileEnding = ".java"
+        private val kotlinFileEnding = ".kt"
+        private val abstractKeywords = listOf("interface", "abstract")
+
+        internal fun File.isAbstract(): Boolean {
+            return this.isCodeClass() && this.containsAbstractKeywords()
+        }
+
+        private fun File.isCodeClass(): Boolean {
+            return this.name.endsWith(javaFileEnding, ignoreCase = true) || this.name.endsWith(kotlinFileEnding, ignoreCase = true)
+        }
+
+        private fun File.containsAbstractKeywords(): Boolean {
+            return this.containsText(*abstractKeywords.toTypedArray())
+        }
+
     }
 
 }
+

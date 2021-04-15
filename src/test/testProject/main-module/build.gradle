@@ -14,6 +14,9 @@ repositories {
 }
 
 dependencies {
+    api project(':second-module')
+    api project(':third-module')
+
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.codehaus.groovy:groovy'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
