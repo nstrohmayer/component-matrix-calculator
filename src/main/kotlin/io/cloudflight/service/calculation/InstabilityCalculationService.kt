@@ -1,36 +1,24 @@
 package io.cloudflight.service.calculation
 
-import java.io.File
+import io.cloudflight.entity.GradleModule
 
 internal interface InstabilityCalculationService {
 
-    fun calculateInstabilityForDirectory(baseDirectory: File): Double
+    fun calculateInstabilityForModule(module: GradleModule): Double
 
 }
 
 internal class InstabilityCalculationServiceImpl : InstabilityCalculationService {
 
-    override fun calculateInstabilityForDirectory(baseDirectory: File): Double {
-//        val allFilesInDirectory = getAllFilesForProject(baseDirectory)
-//
-//        return calculateAbstractnessForFiles(allFilesInDirectory)
-        return 0.0
-    }
+    override fun calculateInstabilityForModule(module: GradleModule): Double {
+        val fanIn = module.ingoingDependencies.size
+        val fanOut = module.outgoingDependencies.size
 
-//    private fun getAllFilesForProject(projectPath: File): List<File> {
-//        return projectPath.walkTopDown().toList()
-//    }
-//
-//    private fun calculateAbstractnessForFiles(allFilesInDirectory: List<File>): Double {
-//        val allCodeFilesCount = allFilesInDirectory.filter { it.isCodeClass() }.size
-//        val abstractFilesCount = allFilesInDirectory.filter { it.isAbstract() }.size
-//
-//        return if (abstractFilesCount > 0) {
-//            abstractFilesCount / allCodeFilesCount.toDouble()
-//        } else {
-//            0.0
-//        }
-//    }
-//
+        return if (fanOut != 0) {
+            fanOut / (fanOut + fanIn).toDouble()
+        } else {
+            1.0
+        }
+    }
 
 }
