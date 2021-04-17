@@ -2,7 +2,6 @@ package io.cloudflight.service
 
 import io.cloudflight.data.TestProjectFilesData
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
