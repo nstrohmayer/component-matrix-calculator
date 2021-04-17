@@ -11,10 +11,6 @@ internal interface AbstractnessCalculationService {
 
 internal class AbstractnessCalculationServiceImpl : AbstractnessCalculationService {
 
-    private val javaFileEnding = ".java"
-    private val kotlinFileEnding = ".kt"
-    private val abstractKeywords = listOf("interface", "abstract")
-
     override fun calculateAbstractnessForDirectory(baseDirectory: File): Double {
         val allFilesInDirectory = getAllFilesForProject(baseDirectory)
 

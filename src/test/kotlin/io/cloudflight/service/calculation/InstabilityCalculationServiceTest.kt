@@ -1,9 +1,10 @@
 package io.cloudflight.service.calculation
 
-import io.cloudflight.entity.GradleModule
+import io.cloudflight.entity.ModuleDependencies
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import java.io.File
 
 @DisplayName("calculating instability")
 internal class InstabilityCalculationServiceTest {
@@ -46,9 +47,10 @@ internal class InstabilityCalculationServiceTest {
         assertThat(instability).isEqualTo(1.0)
     }
 
-    private fun getModuleWithDependencies(ingoingDependencies: Int, outgoingDependencies: Int): GradleModule {
-        return GradleModule(
+    private fun getModuleWithDependencies(ingoingDependencies: Int, outgoingDependencies: Int): ModuleDependencies {
+        return ModuleDependencies(
                 name = "",
+                basePath = File(""),
                 ingoingDependencies = (1..ingoingDependencies).map { "" }.toMutableList(),
                 outgoingDependencies = (1..outgoingDependencies).map { "" }.toMutableList()
         )

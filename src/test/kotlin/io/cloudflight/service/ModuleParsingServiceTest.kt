@@ -48,7 +48,7 @@ internal class ModuleParsingServiceTest {
 
             val projectDependencies = buildGradleFile.getProjectDependencies()
 
-            assertThat(projectDependencies).hasSize(1)
+            assertThat(projectDependencies).hasSize(2)
         }
 
         @Test
@@ -57,7 +57,7 @@ internal class ModuleParsingServiceTest {
 
             val projectDependencies = buildGradleFile.getProjectDependencies()
 
-            assertThat(projectDependencies).containsExactlyInAnyOrder("second-module")
+            assertThat(projectDependencies).contains("second-module")
         }
     }
 
@@ -75,21 +75,27 @@ internal class ModuleParsingServiceTest {
         }
 
         @Test
-        fun `calculates correct amount of outgoing dependencies`() {
+        fun `finds outgoing dependencies`() {
             val firstModuleBaseDirectory = File(BASE_PATH)
 
             val gradleModulesForFirstModule = moduleParsingService.getModulesInDirectory(firstModuleBaseDirectory)
 
-            assertThat(gradleModulesForFirstModule.find { it.name == FIRST_MODULE_NAME }?.outgoingDependencies).hasSize(2)
+            assertThat(gradleModulesForFirstModule.find { it.name == FIRST_MODULE_NAME }?.outgoingDependencies)
+                    .containsExactlyInAnyOrder("second-module", "third-module")
+            assertThat(gradleModulesForFirstModule.find { it.name == SECOND_MODULE_NAME }?.outgoingDependencies)
+                    .containsExactlyInAnyOrder("main-module")
         }
 
         @Test
-        fun `calculates correct amount of ingoing dependencies`() {
+        fun `finds ingoing dependencies`() {
             val firstModuleBaseDirectory = File(BASE_PATH)
 
             val gradleModulesForFirstModule = moduleParsingService.getModulesInDirectory(firstModuleBaseDirectory)
 
-            assertThat(gradleModulesForFirstModule.find { it.name == SECOND_MODULE_NAME }?.ingoingDependencies).hasSize(1)
+            assertThat(gradleModulesForFirstModule.find { it.name == FIRST_MODULE_NAME }?.ingoingDependencies)
+                    .containsExactlyInAnyOrder("second-module")
+            assertThat(gradleModulesForFirstModule.find { it.name == SECOND_MODULE_NAME }?.ingoingDependencies)
+                    .containsExactlyInAnyOrder("main-module")
         }
     }
 }

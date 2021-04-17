@@ -1,35 +1,49 @@
 package io.cloudflight.service
 
-import io.cloudflight.entity.GradleModule
+import io.cloudflight.entity.ModuleDependencies
 import java.io.File
 
 internal interface ModuleParsingService {
 
-    fun getModulesInDirectory(baseDirectory: File): List<GradleModule>
+    fun getModulesInDirectory(baseDirectory: File): List<ModuleDependencies>
 
 }
 
 internal class ModuleParsingServiceImpl : ModuleParsingService {
 
-    override fun getModulesInDirectory(baseDirectory: File): List<GradleModule> {
-        val moduleBaseDirectories = baseDirectory.walkTopDown().maxDepth(1).filter { it.isModule() }.toList()
-        val moduleMap = moduleBaseDirectories.map { it.name to GradleModule(name = it.name) }.toMap()
+    override fun getModulesInDirectory(baseDirectory: File): List<ModuleDependencies> {
+        val moduleBaseDirectories = getModulesBaseDirectory(baseDirectory)
+        val moduleMap = moduleBaseDirectories
+                .map { it.name to ModuleDependencies(name = it.name, basePath = it) }.toMap()
 
-        moduleBaseDirectories.forEach { moduleBaseDirectory ->
-            moduleBaseDirectory.getBuildGradleFile()
+        moduleMap.values.forEach { moduleDependency ->
+            moduleDependency.basePath.getBuildGradleFile()
                     ?.getProjectDependencies()
-                    ?.forEach { projectDependencyName ->
-                        if (moduleMap.keys.contains(projectDependencyName)) {
-                            moduleMap[projectDependencyName]?.ingoingDependencies?.add(projectDependencyName)
-                        }
-
-                        if (moduleMap.keys.contains(moduleBaseDirectory.name)) {
-                            moduleMap[moduleBaseDirectory.name]?.outgoingDependencies?.add(projectDependencyName)
-                        }
+                    ?.forEach { dependencyName ->
+                        addToOwnOutgoingDependencies(moduleDependency, dependencyName)
+                        addToIngoingDependencies(moduleMap, moduleDependency, dependencyName)
                     }
         }
 
         return moduleMap.values.toList()
+    }
+
+    private fun getModulesBaseDirectory(baseDirectory: File): List<File> {
+        return baseDirectory
+                .walkTopDown()
+                .maxDepth(1)
+                .filter { it.isModule() }
+                .toList()
+    }
+
+    private fun addToOwnOutgoingDependencies(moduleDependencies: ModuleDependencies, dependencyName: String) {
+        moduleDependencies.outgoingDependencies.add(dependencyName)
+    }
+
+    private fun addToIngoingDependencies(moduleMap: Map<String, ModuleDependencies>, moduleDependency: ModuleDependencies, dependencyName: String) {
+        if (moduleMap.keys.contains(dependencyName)) {
+            moduleMap[dependencyName]?.ingoingDependencies?.add(moduleDependency.name)
+        }
     }
 
     companion object ModuleFileUtils {
