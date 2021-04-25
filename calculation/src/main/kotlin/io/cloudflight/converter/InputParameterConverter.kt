@@ -1,25 +1,17 @@
 package io.cloudflight.converter
 
+import io.cloudflight.InvalidProjectBasePathException
 import io.cloudflight.entity.InputParameter
-import org.springframework.stereotype.Service
+import java.io.File
 
-interface InputParameterConverter {
+const val PROJECT_PATH_INDEX = 0
 
-    fun Array<String>.toInputParameter(): InputParameter
+internal fun Array<String>.toInputParameter(): InputParameter {
+    val projectBasePath = File(this[PROJECT_PATH_INDEX])
 
-}
-
-@Service
-class InputParameterConverterImpl : InputParameterConverter {
-
-    companion object {
-        const val PROJECT_PATH_INDEX = 0;
+    if (!projectBasePath.isDirectory) {
+        throw InvalidProjectBasePathException("The passed path ($projectBasePath) is not a directory!")
     }
 
-    override fun Array<String>.toInputParameter(): InputParameter {
-        return InputParameter(
-                this[PROJECT_PATH_INDEX]
-        )
-    }
-
+    return InputParameter(projectBasePath = projectBasePath)
 }

@@ -1,5 +1,7 @@
 package io.cloudflight.entity
 
+import java.io.File
+
 data class InputParameter(
-        val projectPath: String
+        val projectBasePath: File
 )

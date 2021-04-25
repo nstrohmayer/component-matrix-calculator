@@ -12,8 +12,6 @@ interface ComponentMatrixCalculationService {
 
     fun calculateForProject(projectPath: File): List<ModuleData> // TODO find a better name
 
-    fun plotComponentMatrix() // TODO
-
 }
 
 class ComponentMatrixCalculationServiceImpl : ComponentMatrixCalculationService {
@@ -24,25 +22,21 @@ class ComponentMatrixCalculationServiceImpl : ComponentMatrixCalculationService 
 
     override fun calculateForProject(projectPath: File): List<ModuleData> {
         return moduleParsingService.getModulesInDirectory(projectPath)
-                .map {
-                    val instability = instabilityCalculationService.calculateInstabilityForModule(it)
-                    val abstractness = abstractnessCalculationService.calculateAbstractnessForDirectory(it.basePath)
+            .map {
+                val instability = instabilityCalculationService.calculateInstabilityForModule(it)
+                val abstractness = abstractnessCalculationService.calculateAbstractnessForDirectory(it.basePath)
 
-                    it.toModuleData(instability, abstractness)
-                }
+                it.toModuleData(instability, abstractness)
+            }
     }
 
     private fun ModuleDependencies.toModuleData(instability: Double, abstractness: Double) = ModuleData(
-            name = this.name,
-            basePath = this.basePath,
-            ingoingDependencies = this.ingoingDependencies.toList(),
-            outgoingDependencies = this.outgoingDependencies.toList(),
-            instability = instability,
-            abstractness = abstractness
+        name = this.name,
+        basePath = this.basePath,
+        ingoingDependencies = this.ingoingDependencies.toList(),
+        outgoingDependencies = this.outgoingDependencies.toList(),
+        instability = instability,
+        abstractness = abstractness
     )
-
-    override fun plotComponentMatrix() {
-        TODO("Not yet implemented")
-    }
 
 }
