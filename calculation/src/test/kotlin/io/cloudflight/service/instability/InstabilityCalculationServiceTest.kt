@@ -1,4 +1,4 @@
-package io.cloudflight.service.calculation
+package io.cloudflight.service.instability
 
 import io.cloudflight.entity.ModuleDependencies
 import org.assertj.core.api.Assertions.assertThat

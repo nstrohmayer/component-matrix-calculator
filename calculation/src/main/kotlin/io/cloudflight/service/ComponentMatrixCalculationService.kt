@@ -2,10 +2,10 @@ package io.cloudflight.service
 
 import io.cloudflight.entity.ModuleData
 import io.cloudflight.entity.ModuleDependencies
-import io.cloudflight.service.calculation.AbstractnessCalculationService
-import io.cloudflight.service.calculation.AbstractnessCalculationServiceImpl
-import io.cloudflight.service.calculation.InstabilityCalculationService
-import io.cloudflight.service.calculation.InstabilityCalculationServiceImpl
+import io.cloudflight.service.instability.AbstractnessCalculationService
+import io.cloudflight.service.instability.AbstractnessCalculationServiceImpl
+import io.cloudflight.service.instability.InstabilityCalculationService
+import io.cloudflight.service.instability.InstabilityCalculationServiceImpl
 import java.io.File
 
 interface ComponentMatrixCalculationService {

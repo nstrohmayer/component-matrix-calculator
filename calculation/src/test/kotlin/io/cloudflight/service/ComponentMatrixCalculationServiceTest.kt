@@ -7,17 +7,17 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.io.File
 
-internal class ComponentMatrixCalculationServiceTest{
+internal class ComponentMatrixCalculationServiceTest {
 
-    private val componentMatrixCalculationService: ComponentMatrixCalculationService = ComponentMatrixCalculationServiceImpl()
+    private val componentMatrixCalculationService: ComponentMatrixCalculationService =
+        ComponentMatrixCalculationServiceImpl()
 
     @DisplayName("calculate for project")
     @Nested
-    inner class CalculateForProjectTests{
-
+    inner class CalculateForProjectTests {
 
         @Test
-        fun `asdf`(){ // TODO find better name
+        fun `asdf`() { // TODO find better name
             val testProjectBasePath = File(TestProjectFilesData.BASE_PATH)
 
             val moduleDataList = componentMatrixCalculationService.calculateForProject(testProjectBasePath)

@@ -1,7 +1,7 @@
 package io.cloudflight.utils
 
 import io.cloudflight.data.TestProjectFilesData.ABSTRACTNESS_TEST_FILES_BASE_PATH
-import io.cloudflight.service.calculation.AbstractnessCalculationServiceImpl.AbstractFileUtils.isAbstract
+import io.cloudflight.service.instability.AbstractnessCalculationServiceImpl.AbstractFileUtils.isAbstract
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested

@@ -1,4 +1,4 @@
-package io.cloudflight.service.calculation
+package io.cloudflight.service.instability
 
 import io.cloudflight.data.TestProjectFilesData.FIRST_MODULE_SOURCES_BASE_PATH
 import org.assertj.core.api.Assertions.assertThat

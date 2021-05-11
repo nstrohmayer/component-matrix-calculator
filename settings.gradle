@@ -1,4 +1,6 @@
 rootProject.name = 'component-matrix-calculator'
 
 include("calculation")
+include("file-analysis")
+include("test-data")
 include("plotting")
