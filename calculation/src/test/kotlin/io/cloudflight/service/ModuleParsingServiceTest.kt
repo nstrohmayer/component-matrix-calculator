@@ -6,6 +6,8 @@ import io.cloudflight.data.TestProjectFilesData.FIRST_MODULE_BUILD_GRADLE_FILE
 import io.cloudflight.data.TestProjectFilesData.FIRST_MODULE_NAME
 import io.cloudflight.data.TestProjectFilesData.SECOND_MODULE_BASE_PATH
 import io.cloudflight.data.TestProjectFilesData.SECOND_MODULE_NAME
+import io.cloudflight.service.ModuleParsingServiceImpl.ModuleFileUtils.getProjectDependencies
+import io.cloudflight.service.ModuleParsingServiceImpl.ModuleFileUtils.isModule
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested

@@ -1,0 +1,9 @@
+@startuml
+left to right direction
+
+[calculation]
+[calculation] --> [plotting]
+[calculation] --> [file-analysis]
+[plotting]
+[file-analysis]
+@enduml
