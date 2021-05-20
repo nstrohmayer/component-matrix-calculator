@@ -1,5 +1,7 @@
 package io.cloudflight.service.instability
 
+import application.FileAnalyzerService
+import application.FileAnalyzerServiceImpl
 import io.cloudflight.utils.containsText
 import java.io.File
 
@@ -10,6 +12,8 @@ internal interface AbstractnessCalculationService {
 }
 
 internal class AbstractnessCalculationServiceImpl : AbstractnessCalculationService {
+
+    private val fileAnalysisService: FileAnalyzerService = FileAnalyzerServiceImpl()
 
     override fun calculateAbstractnessForDirectory(baseDirectory: File): Double {
         val allFilesInDirectory = getAllFilesForProject(baseDirectory)
@@ -22,11 +26,18 @@ internal class AbstractnessCalculationServiceImpl : AbstractnessCalculationServi
     }
 
     private fun calculateAbstractnessForFiles(allFilesInDirectory: List<File>): Double {
-        val allCodeFilesCount = allFilesInDirectory.filter { it.isCodeClass() }.size
-        val abstractFilesCount = allFilesInDirectory.filter { it.isAbstract() }.size
+        var concreteClassesCount = 0
+        var abstractClassesCount = 0
 
-        return if (abstractFilesCount > 0) {
-            abstractFilesCount / allCodeFilesCount.toDouble()
+        allFilesInDirectory.forEach { file ->
+            fileAnalysisService.analyzeFile(file).also {
+                concreteClassesCount += it.concreteClassesCount
+                abstractClassesCount += it.abstractClassesCount
+            }
+        }
+
+        return if (abstractClassesCount > 0) {
+            abstractClassesCount / concreteClassesCount.toDouble()
         } else {
             0.0
         }
@@ -42,7 +53,10 @@ internal class AbstractnessCalculationServiceImpl : AbstractnessCalculationServi
         }
 
         private fun File.isCodeClass(): Boolean {
-            return this.name.endsWith(javaFileEnding, ignoreCase = true) || this.name.endsWith(kotlinFileEnding, ignoreCase = true)
+            return this.name.endsWith(javaFileEnding, ignoreCase = true) || this.name.endsWith(
+                kotlinFileEnding,
+                ignoreCase = true
+            )
         }
 
         private fun File.containsAbstractKeywords(): Boolean {

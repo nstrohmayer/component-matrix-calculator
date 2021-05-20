@@ -19,12 +19,15 @@ internal class PlotModuleDependenciesService : PlotModuleDependenciesUsecase {
 
     override fun plotModuleDependencies(projectPath: File) {
         val moduleDependencies = moduleParsingService.getModulesInDirectory(projectPath)
+        val fileName = "${projectPath.name}.puml"
 
-        plotModuleDependencies(projectPath.name, moduleDependencies)
+        plotModuleDependencies(fileName, moduleDependencies)
     }
 
     private fun plotModuleDependencies(fileName: String, moduleDependencies: List<ModuleDependencies>) {
         File(fileName).printWriter().use { printWriter ->
+            printWriter.println("@startuml")
+
             moduleDependencies.forEach { moduleDependencies ->
                 printWriter.println(moduleDependencies.name.toPlantUmlComponent())
 
@@ -32,6 +35,8 @@ internal class PlotModuleDependenciesService : PlotModuleDependenciesUsecase {
                     printWriter.println(moduleDependencies.name.toPlantUmlComponent() + " --> " + outgoingDependency.toPlantUmlComponent())
                 }
             }
+
+            printWriter.println("@enduml")
         }
     }
 

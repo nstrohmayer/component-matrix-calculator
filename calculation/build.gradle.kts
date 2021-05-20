@@ -16,12 +16,14 @@ dependencies {
     implementation(kotlin("reflect"))
 
     implementation(project(":plotting")) // TODO invert dependency + add dependency injection if needed
+    implementation(project(":file-analysis")) // TODO invert dependency + add dependency injection if needed
     // maybe with singleton plottingServiceFactory + plottingImpl in plotting-module and in init() it registers itself in the factory
     implementation("kscience.plotlykt:plotlykt-server:0.3.0") // TODO fix
-    implementation("org.springframework.boot:spring-boot-starter")
+//    implementation("org.springframework.boot:spring-boot-starter")
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+//    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation(project(":test-data"))
+    testImplementation(project(":file-analysis")) // TODO invert dependency + add dependency injection if needed
 }
 
 tasks.named<Test>("test") {
